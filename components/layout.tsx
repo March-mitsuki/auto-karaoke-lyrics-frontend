@@ -1,6 +1,6 @@
-import type { Props } from '@/interfaces/propsDataTypes';
+import type { PropsData } from '@/interfaces/propsDataTypes';
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ children }: PropsData) => {
     return (
         <div className='font-medium text-slate-00'>
             { children }
