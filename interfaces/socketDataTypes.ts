@@ -10,3 +10,15 @@ export type socketContextData = {
     }[],
     setMessages: Function
 }
+
+export type LyricsData = {
+    text: string,
+    ruby: string
+}
+
+export type SetlistData = {
+    id: number,
+    sort: number,
+    text: string,
+    memo: string
+}
