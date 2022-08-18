@@ -22,13 +22,13 @@ const Home = () => {
                     <div className='px-5 py-2 mt-2 mb-6'>
                         <OrderCompo />
                     </div>
-                    <Link href='/display'>
-                        <div className='text-right'>
+                    <div className='text-right'>
+                        <Link href='/display'>
                             <a className='bg-sky-500 hover:bg-sky-700 rounded-full px-10 py-2 mx-10 border-2 border-gray-300 text-4xl'>
                                 Go Display
                             </a>
-                        </div>
-                    </Link>
+                        </Link>
+                    </div>
                 </SocketProvider>
             </div>
         </>
