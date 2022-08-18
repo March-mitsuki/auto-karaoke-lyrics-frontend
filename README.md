@@ -1,5 +1,7 @@
 # auto-karaoke-lyrics的前端服务器
-后端repo<https://github.com/March-mitsuki/auto-karaoke-lyrics>
+this is auto-karaoke-lyrics frontend repo use with nextjs
+
+backend repo and more infomation here -> <https://github.com/March-mitsuki/auto-karaoke-lyrics>
 
 ## Getting Started
 启动开发服务器
