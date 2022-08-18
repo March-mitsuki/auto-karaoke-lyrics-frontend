@@ -21,6 +21,7 @@ export type SetlistData = {
     id: number,
     sort: number,
     text: string,
+    ruby: string,
     memo: string
 }
 
@@ -60,4 +61,7 @@ export type ClientToServerEvents = {
 
     // 校准时间
     correct_lyrics: (data: { sort: string | number }) => void;
+
+    // 往后校准时间
+    correct_lyrics_back: (data: { sort: string | number }) => void;
 }

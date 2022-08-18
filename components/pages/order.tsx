@@ -10,6 +10,7 @@ const OrderCompo = () => {
         id: -1,
         sort: -1,
         text: 'NULL',
+        ruby: 'null',
         memo: 'connecting to server...'
     }])
 
@@ -36,6 +37,7 @@ const OrderCompo = () => {
             <div className='flex border-2 rounded-full border-gray-300 mb-3'>
                 <div className='flex-auto ml-10 mr-5 my-2'>{elem.sort}</div>
                 <div className='flex-auto mx-5 my-2'>{elem.text}</div>
+                <div className='flex-auto mx-5 my-2'>{elem.ruby}</div>
                 <div className='text-sm ml-2 mr-5 my-2'>{elem.memo}</div>
                 <button
                     onClick={() => {
@@ -47,10 +49,17 @@ const OrderCompo = () => {
                 <button
                     onClick={() => {
                         console.log('correct ->', elem.sort);
-                        socket.emit('correct_lyrics', { sort: 1 })
+                        socket.emit('correct_lyrics', { sort: elem.sort })
                     }}
                     className={orderBtnStyle}
-                >校准</button>
+                >校准下句</button>
+                <button
+                    onClick={() => {
+                        console.log('correct_lyrics_back ->', elem.sort);
+                        socket.emit('correct_lyrics_back', { sort: elem.sort })
+                    }}
+                    className={orderBtnStyle}
+                >后退校准</button>
                 <button
                     onClick={() => {
                         console.log('stop ->', elem.sort);
