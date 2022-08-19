@@ -11,11 +11,6 @@ export type socketContextData = {
     setMessages: Function
 }
 
-export type LyricsData = {
-    text: string,
-    ruby: string
-}
-
 // server的Setlist(tyoeORM的实体)
 export type SetlistData = {
     id: number,
@@ -39,7 +34,17 @@ export type ServerToClientEvents = {
     reload_setlist: (data: SetlistData[]) => void;
 
     // 每次更新字幕
-    change_lyrics: (data: { text: string, ruby: string }) => void;
+    change_lyrics: (data: {
+        current: {
+            text: string, ruby: string
+        },
+        before: {
+            text: string, ruby: string
+        },
+        next: {
+            text: string, ruby: string
+        }
+    }) => void;
 
     // 告知client删除字幕的返回状态
     delete_lyrics_info: (data: { stat: boolean, setlist: SetlistData[] | [] }) => void;

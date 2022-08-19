@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { useSocket } from '@/components'
-import type { LyricsData } from '@/interfaces/socketDataTypes';
 
 const SocketDisplay = () => {
     const socket = useSocket();
     const [text, setText] = useState('')
     const [ruby, setRuby] = useState('')
 
-    socket.on('change_lyrics', (data: LyricsData) => {
-        setText(data.text);
-        setRuby(data.ruby);
+    socket.on('change_lyrics', (data) => {
+        setText(data.current.text);
+        setRuby(data.current.ruby);
     })
 
     return (
