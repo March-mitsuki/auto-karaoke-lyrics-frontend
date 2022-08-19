@@ -3,10 +3,16 @@ import { useSocket } from '../socket'
 import type { SetlistData } from '@/interfaces/socketDataTypes';
 import { orderBtnStyle } from '@/styles/styleStr';
 
+// interface CustomStorage<T> extends Storage {
+//     getItem(key: ): string | null
+// }
+
 
 const OrderCompo = () => {
-    const socket = useSocket()
+    const socket = useSocket();
     const hasInitialized = useRef(false);
+    const IS_PLAY_STATE = 'operation/order/isplay'
+
     const [setlist, setSetlist] = useState<SetlistData[]>([{
         id: -1,
         sort: -1,
@@ -14,7 +20,18 @@ const OrderCompo = () => {
         ruby: 'null',
         memo: 'connecting to server...'
     }])
-    const [isPlay, setIsPlay] = useState<boolean>(false)
+    const [isPlay, setIsPlay] = useState<'true' | 'false'>(() => {
+        if (typeof(window) !== 'undefined') {
+            if (
+                localStorage.getItem(IS_PLAY_STATE) !== null
+                && localStorage.getItem(IS_PLAY_STATE) !== ''
+            ) {
+                const _isPlay: any = localStorage.getItem(IS_PLAY_STATE)
+                return _isPlay;
+            }
+        }
+        return 'false'
+    })
 
     useEffect(() => {
         if (hasInitialized.current) {
@@ -24,12 +41,34 @@ const OrderCompo = () => {
         socket.on('connect', () => {
             console.log('client connect');
             socket.emit('reload_setlist');
-        })
-        
+        });
         socket.on('setlist_response', (data) => {
             console.log('on setlist_response');
             setSetlist(data)
         });
+
+        socket.on("change_lyrics", (data) => {
+            if (
+                data.stat === 0
+                && typeof(window) !== 'undefined'
+            ) {
+                setIsPlay('true')
+                localStorage.setItem(IS_PLAY_STATE, 'true')
+            } else if (
+                data.stat === 2
+                && typeof(window) !== 'undefined'
+            ) {
+                setIsPlay('false')
+                localStorage.setItem(IS_PLAY_STATE, 'false')
+            } else if (
+                isPlay === 'false'
+                && data.stat === 1
+                && typeof(window) !== 'undefined'
+            ) {
+                setIsPlay('true')
+                localStorage.setItem(IS_PLAY_STATE, 'true')
+            }
+        })
 
         // 这里读不到setlist的值, 不知道为什么
         // socket.on('delete_lyrics_info', (data) => {
@@ -42,7 +81,7 @@ const OrderCompo = () => {
         //         console.log('delete_lyrics false');
         //     }
         // })
-    }, [socket, setlist])
+    }, [socket, isPlay])
 
     const pauseOrperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id}>
@@ -55,7 +94,6 @@ const OrderCompo = () => {
                     onClick={() => {
                         console.log('play ->', elem.sort);
                         socket.emit('send_lyrics', {sort: elem.sort})
-                        setIsPlay(true)
                     }}
                     className={orderBtnStyle}
                 >开始</button>
@@ -80,13 +118,6 @@ const OrderCompo = () => {
                 <div className='text-sm ml-2 mr-5 my-2'>{elem.memo}</div>
                 <button
                     onClick={() => {
-                        console.log('play ->', elem.sort);
-                        socket.emit('send_lyrics', {sort: elem.sort})
-                    }}
-                    className={orderBtnStyle}
-                >重新开始</button>
-                <button
-                    onClick={() => {
                         console.log('correct ->', elem.sort);
                         socket.emit('correct_lyrics', { sort: elem.sort })
                     }}
@@ -103,23 +134,14 @@ const OrderCompo = () => {
                     onClick={() => {
                         console.log('stop ->', elem.sort);
                         socket.emit('stop_play', 1)
-                        setIsPlay(false)
                     }}
-                    className={orderBtnStyle}
+                    className='bg-orange-500 hover:bg-orange-700 rounded-full px-3 border-2 border-gray-300 text-white my-1 mx-3'
                 >停止</button>
-                <button
-                    onClick={() => {
-                        console.log('delete ->', elem.sort);
-                        socket.emit('delete_lyrics', {sort: elem.sort})
-                        setSetlist(setlist.filter(x => x.sort !== elem.sort))
-                    }}
-                    className='bg-red-500 hover:bg-red-700 rounded-full px-3 border-2 border-gray-300 text-white my-1 mx-3'
-                >删除</button>
             </div>
         </li>
     )
 
-    if (isPlay) {
+    if (isPlay === 'true') {
         return (
             <ul>
                 {playingOperation}

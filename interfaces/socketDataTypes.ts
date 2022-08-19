@@ -43,7 +43,8 @@ export type ServerToClientEvents = {
         },
         next: {
             text: string, ruby: string
-        }
+        },
+        stat: 0 | 1 | 2 // 0 -> 最开始的一条, 1 -> 途中, 2 -> 最后一条
     }) => void;
 
     // 告知client删除字幕的返回状态

@@ -51,8 +51,8 @@ const FileInput = () => {
                 type: type,
                 ass_data: ass_data
             })
-            // window.location.reload()
-            socket.emit('reload_setlist')
+            window.location.reload()
+            // socket.emit('reload_setlist')
         } catch (err) {
             console.log('emit add_ass err:', err)
         }
@@ -94,6 +94,15 @@ const FileInput = () => {
                 className={orderBtnStyle}
             >
                 刷新Setlist
+            </button>
+            <button
+                onClick={() => {
+                    localStorage.clear();
+                    window.location.reload();
+                }}
+                className={orderBtnStyle}
+            >
+                初始化preview
             </button>
         </>
     )

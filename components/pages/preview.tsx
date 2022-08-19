@@ -8,11 +8,102 @@ const sidePreviewStyle = 'rounded-lg text-center bg-gray-300 px-10 py-2 my-5 min
 
 
 const Preview = () => {
-    const socket = useSocket()
+    const socket = useSocket();
     const hasInitialized = useRef(false);
-    const [current, setCurrent] = useState({text: '尚未开始播放', ruby: '当前歌词'});
-    const [before, setBefore] = useState({text: '尚未开始', ruby: '上一句'});
-    const [next, setNext] = useState({text: '尚未开始', ruby: '下一句'});
+
+    const CURRENT_TEXT = 'operation/preview/current_text';
+    const CURRENT_RUBY = 'operation/preview/current_ruby';
+
+    const BEFORE_TEXT = 'operation/preview/before_text';
+    const BEFORE_RUBY = 'operation/preview/before_ruby';
+
+    const NEXT_TEXT = 'operation/preview/next_text';
+    const NEXT_RUBY = 'operation/preview/next_ruby';
+
+    const [current, setCurrent] = useState<{
+        text: string,
+        ruby: string
+    }>(() => {
+        let _current: {
+            text: any,
+            ruby: any
+        } = {
+            text: '尚未开始播放',
+            ruby: '当前歌词'
+        }
+        if (typeof(window) !== 'undefined') {
+            if (
+                localStorage.getItem(CURRENT_TEXT) !== null
+                && localStorage.getItem(CURRENT_TEXT) !== ''
+            ) {
+                _current.text = localStorage.getItem(CURRENT_TEXT)
+            }
+            if (
+                localStorage.getItem(CURRENT_RUBY) !== null
+                && localStorage.getItem(CURRENT_RUBY) !== ''
+            ) {
+                _current.ruby = localStorage.getItem(CURRENT_RUBY)
+            }
+        }
+        console.log('return _current: ', _current);
+        return _current
+    });
+
+    const [before, setBefore] = useState<{
+        text: string,
+        ruby: string
+    }>(() => {
+        let _before: {
+            text: any,
+            ruby: any
+        } = {
+            text: '尚未开始',
+            ruby: '上一句'
+        }
+        if (typeof(window) !== 'undefined') {
+            if(
+                localStorage.getItem(BEFORE_TEXT) !== null
+                && localStorage.getItem(BEFORE_TEXT) !== ''
+            ){
+                _before.text = localStorage.getItem(BEFORE_TEXT)
+            }
+            if(
+                localStorage.getItem(BEFORE_RUBY) !== null
+                && localStorage.getItem(BEFORE_RUBY) !== ''
+            ){
+                _before.ruby = localStorage.getItem(BEFORE_RUBY)
+            }
+        }
+        return _before
+    });
+
+    const [next, setNext] = useState<{
+        text: string,
+        ruby: string
+    }>(() => {
+        let _next: {
+            text: any,
+            ruby: any
+        } = {
+            text: '尚未开始',
+            ruby: '下一句'
+        }
+        if (typeof(window) !== 'undefined') {
+            if (
+                localStorage.getItem(NEXT_TEXT) !== null
+                && localStorage.getItem(NEXT_TEXT) !== ''
+            ) {
+                _next.text = localStorage.getItem(NEXT_TEXT)
+            }
+            if (
+                localStorage.getItem(NEXT_RUBY) !== null
+                && localStorage.getItem(NEXT_RUBY) !== ''
+            ) {
+                _next.ruby = localStorage.getItem(NEXT_RUBY)
+            }
+        }
+        return _next
+    });
 
     useEffect(() => {
         if (hasInitialized.current) {
@@ -21,11 +112,44 @@ const Preview = () => {
         hasInitialized.current = true
         socket.on('change_lyrics', (data) => {
             console.log('on change_lyrics');
-            setCurrent({text: data.current.text, ruby: data.current.ruby});
-            setBefore({text: data.before.text, ruby: data.before.ruby});
-            setNext({text: data.next.text, ruby: data.next.ruby});
+            if (data.current.text === '' && data.stat === 2) {
+                localStorage.clear()
+                setCurrent({text: '歌曲结束', ruby: '歌曲结束'});
+            } else if(data.current.text === '') {
+                setCurrent({text: '***', ruby: '***'});
+                localStorage.setItem(CURRENT_TEXT, '***');
+                localStorage.setItem(CURRENT_RUBY, '***');
+            } else {
+                setCurrent({text: data.current.text, ruby: data.current.ruby});
+                localStorage.setItem(CURRENT_TEXT, data.current.text);
+                localStorage.setItem(CURRENT_RUBY, data.current.ruby);
+            }
+
+            if (data.before.text === '' && data.stat === 2) {
+                setBefore({text: '***', ruby: '***'});
+            } else if (data.before.text === '') {
+                setBefore({text: '***', ruby: '***'});
+                localStorage.setItem(BEFORE_TEXT, '***');
+                localStorage.setItem(BEFORE_RUBY, '***');
+            } else {
+                setBefore({text: data.before.text, ruby: data.before.ruby});
+                localStorage.setItem(BEFORE_TEXT, data.before.text);
+                localStorage.setItem(BEFORE_RUBY, data.before.ruby);
+            }
+
+            if (data.next.text === '' && data.stat === 2) {
+                setNext({text: '***', ruby: '***'});
+            } else if (data.next.text === '') {
+                setNext({text: '***', ruby: '***'});
+                localStorage.setItem(NEXT_TEXT, '***');
+                localStorage.setItem(NEXT_RUBY, '***');
+            } else {
+                setNext({text: data.next.text, ruby: data.next.ruby});
+                localStorage.setItem(NEXT_TEXT, data.next.text);
+                localStorage.setItem(NEXT_RUBY, data.next.ruby);
+            }
         })
-    }, [socket])
+    }, [socket, current, before, next])
 
     return (
         <>

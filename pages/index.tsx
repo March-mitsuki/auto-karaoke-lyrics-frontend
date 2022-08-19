@@ -1,11 +1,12 @@
-import Head from 'next/head'
+import Head from 'next/head';
 import Link from 'next/link';
 import {
     SocketProvider,
     FileInput,
-    OrderCompo,
-    Preview
 } from '@/components';
+import dynamic from "next/dynamic";
+const OrderCompo = dynamic(() => import('../components/pages/order'), {ssr: false})
+const Preview = dynamic(() => import('../components/pages/preview'), {ssr: false})
 
 
 const Home = () => {
