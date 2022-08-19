@@ -31,7 +31,7 @@ type AddAssData = {
 // server.emit, client.on
 export type ServerToClientEvents = {
     // 发送setlist
-    reload_setlist: (data: SetlistData[]) => void;
+    setlist_response: (data: SetlistData[]) => void;
 
     // 每次更新字幕
     change_lyrics: (data: {
@@ -47,7 +47,7 @@ export type ServerToClientEvents = {
     }) => void;
 
     // 告知client删除字幕的返回状态
-    delete_lyrics_info: (data: { stat: boolean, setlist: SetlistData[] | [] }) => void;
+    delete_lyrics_info: (data: { stat: boolean, sort: number }) => void;
 }
 
 // client.emit, server.on
@@ -69,4 +69,6 @@ export type ClientToServerEvents = {
 
     // 往后校准时间
     correct_lyrics_back: (data: { sort: string | number }) => void;
+
+    reload_setlist: () => void;
 }

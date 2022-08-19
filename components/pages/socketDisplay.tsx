@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSocket } from '@/components'
 
 const SocketDisplay = () => {
@@ -6,10 +6,12 @@ const SocketDisplay = () => {
     const [text, setText] = useState('')
     const [ruby, setRuby] = useState('')
 
-    socket.on('change_lyrics', (data) => {
-        setText(data.current.text);
-        setRuby(data.current.ruby);
-    })
+    useEffect(() => {
+        socket.on('change_lyrics', (data) => {
+            setText(data.current.text);
+            setRuby(data.current.ruby);
+        })
+    }, [socket])
 
     return (
         <>

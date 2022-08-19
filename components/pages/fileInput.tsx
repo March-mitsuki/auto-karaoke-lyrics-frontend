@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSocket } from '../socket';
-import { onelineInputStyle } from '@/styles/styleStr';
+import { onelineInputStyle, orderBtnStyle } from '@/styles/styleStr';
 
 export const popFileSelector = () => {
     return new Promise((resolve, reject) => {
@@ -51,7 +51,8 @@ const FileInput = () => {
                 type: type,
                 ass_data: ass_data
             })
-            window.location.reload()
+            // window.location.reload()
+            socket.emit('reload_setlist')
         } catch (err) {
             console.log('emit add_ass err:', err)
         }
@@ -85,6 +86,14 @@ const FileInput = () => {
             />
             <button onClick={clickHandler} className='bg-orange-400 hover:bg-orange-600 rounded-full px-3 border-2 border-gray-300 text-white'>
                 选择ass并提交
+            </button>
+            <button 
+                onClick={() => {
+                    socket.emit('reload_setlist')
+                }}
+                className={orderBtnStyle}
+            >
+                刷新Setlist
             </button>
         </>
     )

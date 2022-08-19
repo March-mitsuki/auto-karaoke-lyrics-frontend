@@ -6,7 +6,12 @@ import type {
     ClientToServerEvents
 } from '@/interfaces/socketDataTypes';
 
-const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io('ws://subapi.mitsuki114514.com')
+export const socket: Socket<
+    ServerToClientEvents,
+    ClientToServerEvents
+> = io('ws://subapi.mitsuki114514.com', {
+    transports: ['websocket']
+})
 
 export const socketContext = React.createContext<
     Socket<ServerToClientEvents, ClientToServerEvents>
@@ -14,7 +19,7 @@ export const socketContext = React.createContext<
 
 const SocketProvider = (props: { children: React.ReactNode }) => {
     return (
-        <socketContext.Provider value={socket} {...props}>
+        <socketContext.Provider value={socket}>
             {props.children}
         </socketContext.Provider>
     )
