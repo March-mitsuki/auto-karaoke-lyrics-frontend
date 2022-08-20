@@ -44,7 +44,6 @@ const Preview = () => {
                 _current.ruby = localStorage.getItem(CURRENT_RUBY)
             }
         }
-        console.log('return _current: ', _current);
         return _current
     });
 

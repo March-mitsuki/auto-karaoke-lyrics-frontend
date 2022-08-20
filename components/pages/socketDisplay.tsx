@@ -98,15 +98,15 @@ const SocketDisplay = () => {
     if (!style.order) {
         return (
             <>
-                <div style={style.ruby}>{JSON.stringify(style.ruby)}</div>
-                <div style={style.text}>{JSON.stringify(style.text)}</div>
+                <div style={style.ruby}>{ruby}</div>
+                <div style={style.text}>{text}</div>
             </>
         )
     } else {
         return (
             <>
-                <div style={style.text}>{JSON.stringify(style.text)}</div>
-                <div style={style.ruby}>{JSON.stringify(style.ruby)}</div>
+                <div style={style.text}>{text}</div>
+                <div style={style.ruby}>{ruby}</div>
             </>
         )
     }
