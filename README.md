@@ -21,5 +21,10 @@ npm run export
 Open [http://localhost:19810](http://localhost:19810) with your browser to see the result.
 
 ### Todo
-[] 输入sort改为自动检测
-[] 现在校准只能往前走(按慢了可以调,按快了就寄了)得修
+[ ] 输入sort改为自动检测
+
+[x] 现在校准只能往前走(按慢了可以调,按快了就寄了)得修
+
+[ ] 增加自定义display-css的功能
+
+[ ] 增加可以交换text和ruby位置的功能

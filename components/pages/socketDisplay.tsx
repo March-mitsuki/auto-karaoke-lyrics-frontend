@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSocket } from '@/components'
+import type * as CSS from 'csstype'
 
 const SocketDisplay = () => {
     const socket = useSocket();
+    const hasInitialized = useRef(false);
+
     const TEXT = 'display/text'
     const RUBY = 'display/ruby'
+
     const [text, setText] = useState<string>(() => {
         let _text: any = ''
         if (typeof(window) !== 'undefined') {
@@ -42,21 +46,70 @@ const SocketDisplay = () => {
         return _ruby
     })
 
+    const textStyleDefault: CSS.Properties = {
+        textAlign: 'center',
+        fontSize: '30px',
+        fontWeight: 'bold'
+    }
+    const rubyStyleDefault: CSS.Properties = {
+        textAlign: 'center',
+        fontSize: '20px',
+        fontWeight: 'bold'
+    }
+    const [style, setStyle] = useState<{
+        text: CSS.Properties,
+        ruby: CSS.Properties,
+        order: boolean // true -> text在下面, false -> ruby在下面
+    }>({
+        text: textStyleDefault,
+        ruby: rubyStyleDefault,
+        order: false
+    })
+
+
     useEffect(() => {
+        if (hasInitialized.current) {
+            return;
+        }
+        hasInitialized.current = true
+
         socket.on('change_lyrics', (data) => {
             setText(data.current.text);
             setRuby(data.current.ruby);
             localStorage.setItem(TEXT, data.current.text)
             localStorage.setItem(RUBY, data.current.ruby)
         })
+        socket.on('change_style', (data) => {
+            console.log('style change!', data);
+            try {
+                setStyle({
+                    text: data.text,
+                    ruby: data.ruby,
+                    order: data.order
+                })
+            } catch (err) {
+                console.log('style parser error, please check it');
+                console.log('err msg:', err);
+            }
+        })
     }, [socket])
 
-    return (
-        <>
-            <div className='text-center font-semibold text-lg'>{ruby}</div>
-            <div className='text-center font-semibold text-2xl'>{text}</div>
-        </>
-    )
+
+    if (!style.order) {
+        return (
+            <>
+                <div style={style.ruby}>{JSON.stringify(style.ruby)}</div>
+                <div style={style.text}>{JSON.stringify(style.text)}</div>
+            </>
+        )
+    } else {
+        return (
+            <>
+                <div style={style.text}>{JSON.stringify(style.text)}</div>
+                <div style={style.ruby}>{JSON.stringify(style.ruby)}</div>
+            </>
+        )
+    }
 }
 
 export default SocketDisplay

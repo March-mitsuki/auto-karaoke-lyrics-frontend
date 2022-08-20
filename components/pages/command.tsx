@@ -8,10 +8,10 @@ import { orderBtnStyle } from '@/styles/styleStr';
 // }
 
 
-const OrderCompo = () => {
+const CommandCompo = () => {
     const socket = useSocket();
     const hasInitialized = useRef(false);
-    const IS_PLAY_STATE = 'operation/order/isplay'
+    const IS_PLAY_STATE = 'operation/command/isplay'
 
     const [setlist, setSetlist] = useState<SetlistData[]>([{
         id: -1,
@@ -156,4 +156,4 @@ const OrderCompo = () => {
     }
 }
 
-export default OrderCompo
+export default CommandCompo

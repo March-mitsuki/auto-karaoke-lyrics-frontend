@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io-client'
+import type * as CSS from 'csstype'
 
 export type socketContextData = {
     socket: Socket,
@@ -18,6 +19,11 @@ export type SetlistData = {
     text: string,
     ruby: string,
     memo: string
+}
+export type DisplayStyleData = {
+    text: CSS.Properties,
+    ruby: CSS.Properties,
+    order: boolean // true -> text在下面, false -> ruby在下面
 }
 
 // 试着按照socketio的官方文档写了写, 先声明定义不export的type
@@ -49,6 +55,9 @@ export type ServerToClientEvents = {
 
     // 告知client删除字幕的返回状态
     delete_lyrics_info: (data: { stat: boolean, sort: number }) => void;
+
+    // 通知客户端更改display-style
+    change_style: (data: DisplayStyleData) => void
 }
 
 // client.emit, server.on
@@ -71,5 +80,9 @@ export type ClientToServerEvents = {
     // 往后校准时间
     correct_lyrics_back: (data: { sort: string | number }) => void;
 
+    // 客户端请求刷新setlist
     reload_setlist: () => void;
+
+    // 客户端请求更新display-style
+    req_change_style: (data: DisplayStyleData) => void
 }
