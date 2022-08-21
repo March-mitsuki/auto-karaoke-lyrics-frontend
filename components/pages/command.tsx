@@ -2,15 +2,31 @@ import { useEffect, useState, useRef } from 'react';
 import { useSocket } from '../socket'
 import type { SetlistData } from '@/interfaces/socketDataTypes';
 import {
-    btnBlueStyle,
-    btnOrangeStyle,
-    btnRedStyle
+    btnBlueStyle, btnOrangeStyle, btnRedStyle, btnSkyStyle,
+    cmdLineStyle, cmdLineStyleDark
 } from '@/styles/styleStr';
 
 // interface CustomStorage<T> extends Storage {
 //     getItem(key: ): string | null
 // }
 
+export const popInput = (preValue: string) => {
+    return new Promise((resolve, reject) => {
+        try {
+            let input = document.createElement('input');
+            input.value = preValue;
+            input.type = 'text';
+            input.onchange = (event: any) => {
+                let inputValue = event.target.value;
+                console.log(inputValue);
+                resolve(inputValue)
+            };
+            input.click();
+        } catch (err) {
+            reject(`popFileSelector error: ${err}`)
+        }
+    });
+}
 
 const CommandCompo = () => {
     const socket = useSocket();
@@ -22,7 +38,8 @@ const CommandCompo = () => {
         sort: -1,
         text: 'NULL',
         ruby: 'null',
-        memo: 'connecting to server...'
+        memo: 'connecting to server...',
+        isSend: false
     }])
     const [isPlay, setIsPlay] = useState<'true' | 'false'>(() => {
         if (typeof(window) !== 'undefined') {
@@ -89,15 +106,24 @@ const CommandCompo = () => {
 
     const pauseOrperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id} className=''>
-            <div className='flex gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'>
+            <div className={elem.isSend ? cmdLineStyleDark : cmdLineStyle}>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>
-                <div className='text-sm'>{elem.memo}</div>
+                <div
+                    className='text-sm'
+                    onDoubleClick={(event) => console.log(event.target)}
+                >{elem.memo}</div>
                 <button
                     onClick={() => {
                         console.log('play ->', elem.sort);
                         socket.emit('send_lyrics', {sort: elem.sort})
+                        setSetlist(setlist.map(mapElem => {
+                            if (mapElem.sort === elem.sort) {
+                                mapElem.isSend = true
+                            }
+                            return mapElem
+                        }))
                     }}
                     className={btnBlueStyle}
                 >开始</button>
@@ -115,7 +141,7 @@ const CommandCompo = () => {
 
     const playingOperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id} >
-            <div className='flex gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'>
+            <div className={elem.isSend ? cmdLineStyleDark : cmdLineStyle}>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>
@@ -124,16 +150,15 @@ const CommandCompo = () => {
                     onClick={() => {
                         console.log('send blank ->', elem.sort);
                         socket.emit('send_blank', { sort: elem.sort })
-
                     }}
-                    className={btnBlueStyle}
-                >发送</button>
+                    className={btnSkyStyle}
+                >空白</button>
                 <button
                     onClick={() => {
                         console.log('pause ->', elem.sort);
                         socket.emit('pause_lyrics', { sort: elem.sort })
                     }}
-                    className={btnBlueStyle}
+                    className={btnSkyStyle}
                 >暂停</button>
                 <button
                     onClick={() => {
@@ -154,7 +179,7 @@ const CommandCompo = () => {
                         console.log('correct back two ->', elem.sort);
                         socket.emit('correct_back_two', { sort: elem.sort })
                     }}
-                    className={btnBlueStyle}
+                    className={btnSkyStyle}
                 >后后退</button>
                 <button
                     onClick={() => {

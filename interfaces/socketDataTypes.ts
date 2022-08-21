@@ -1,5 +1,6 @@
 import { Socket } from 'socket.io-client'
 import type * as CSS from 'csstype'
+import { type } from 'os'
 
 export type socketContextData = {
     socket: Socket,
@@ -13,12 +14,15 @@ export type socketContextData = {
 }
 
 // server的Setlist(tyoeORM的实体)
-export type SetlistData = {
+export interface Setlist {
     id: number,
     sort: number,
     text: string,
     ruby: string,
     memo: string
+}
+export interface SetlistData extends Setlist {
+    isSend: boolean;
 }
 export type DisplayStyleData = {
     text: CSS.Properties,
