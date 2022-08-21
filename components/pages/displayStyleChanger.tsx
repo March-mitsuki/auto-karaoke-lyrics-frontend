@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { onelineInputStyle, orderBtnStyle } from '@/styles/styleStr';
+import { basicInputStyle, btnOrangeStyle } from '@/styles/styleStr';
 import { useSocket } from '../socket';
 import type * as CSS from 'csstype'
 
-const STYLE_TEXT = 'operation/style/text'
-const STYLE_RUBY = 'operation/style/ruby'
-const STYLE_ORDER = 'operation/style/order'
+export const STYLE_TEXT = 'operation/style/text'
+export const STYLE_RUBY = 'operation/style/ruby'
+export const STYLE_ORDER = 'operation/style/order'
 
 const DisplayStyleChanger = () => {
     const socket = useSocket()
@@ -117,8 +117,8 @@ const DisplayStyleChanger = () => {
     return (
         <>
             <div className='flex items-center'>
-                <label htmlFor='style-text' className='text-center ml-10'>text<br/>react-inline-css</label>
-                <div className={checkSpell.text? 'invisible' : 'mx-2'}>
+                <label htmlFor='style-text' className='text-center'>text<br/>react-inline-css</label>
+                <div className={checkSpell.text? 'invisible' : 'px-2'}>
                     <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='#fb7185' strokeWidth='2'>
                         <path strokeLinecap='round' strokeLinejoin='round' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
                     </svg>
@@ -127,7 +127,7 @@ const DisplayStyleChanger = () => {
                     id='style-text'
                     value={previewStyle.text}
                     onChange={textStyleChangeHandler}
-                    className={onelineInputStyle}
+                    className={basicInputStyle}
                     cols={50}
                     rows={3}
                     autoComplete='off'
@@ -135,8 +135,8 @@ const DisplayStyleChanger = () => {
                 />
             </div>
             <div className='flex items-center'>
-                <label htmlFor='style-ruby' className='text-center ml-5'>ruby<br/>react-inline-css</label>
-                <div className={checkSpell.ruby? 'invisible' : 'mx-2'}>
+                <label htmlFor='style-ruby' className='text-center'>ruby<br/>react-inline-css</label>
+                <div className={checkSpell.ruby? 'invisible' : 'px-2'}>
                     <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='#fb7185' strokeWidth='2'>
                         <path strokeLinecap='round' strokeLinejoin='round' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
                     </svg>
@@ -144,7 +144,7 @@ const DisplayStyleChanger = () => {
                 <textarea
                     id='style-ruby'
                     value={previewStyle.ruby}
-                    className={onelineInputStyle}
+                    className={basicInputStyle}
                     onChange={rubyStyleChangeHandler}
                     cols={50}
                     rows={3}
@@ -153,14 +153,16 @@ const DisplayStyleChanger = () => {
                 />
             </div>
             <div className='flex items-center'>
-                <label htmlFor='style-order' className='ml-2'>交换双语位置</label>
-                <input
-                    type='checkbox'
-                    id='style-order'
-                    onChange={orderChangeHandler}
-                    checked={style.order}
-                    className='mr-3'
-                />
+                <label htmlFor='style-order' className='pr-5'>
+                    交换双语位置
+                    <input
+                        type='checkbox'
+                        id='style-order'
+                        onChange={orderChangeHandler}
+                        checked={style.order}
+                        className=''
+                    />
+                </label>
                 <button
                     onClick={() => {
                         if (checkSpell.text === true && checkSpell.ruby === true) {
@@ -169,26 +171,8 @@ const DisplayStyleChanger = () => {
                             console.log('语法不正确, 无法更改样式');
                         }
                     }}
-                    className='mr-4 bg-orange-400 hover:bg-orange-600 rounded-full px-3 border-2 border-gray-300 text-white'
+                    className={btnOrangeStyle}
                 >变更样式</button>
-                <button
-                    onClick={() => {
-                        localStorage.removeItem(STYLE_TEXT);
-                        localStorage.removeItem(STYLE_RUBY);
-                        localStorage.removeItem(STYLE_ORDER);
-                        window.location.reload();
-                    }}
-                    className='bg-red-500 hover:bg-red-700 rounded-full px-3 mr-3 border-2 border-gray-300 text-white'
-                >初始化样式</button>
-                <button
-                    onClick={() => {
-                        setPreviewStyle({
-                            text: JSON.stringify(style.text,null,2),
-                            ruby: JSON.stringify(style.ruby,null,2)
-                        })
-                    }}
-                    className={orderBtnStyle}
-                >刷新样式preview</button>
             </div>
         </>
     )

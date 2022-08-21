@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSocket } from '../socket'
 import type { SetlistData } from '@/interfaces/socketDataTypes';
-import { orderBtnStyle } from '@/styles/styleStr';
+import {
+    btnBlueStyle,
+    btnOrangeStyle,
+    btnRedStyle
+} from '@/styles/styleStr';
 
 // interface CustomStorage<T> extends Storage {
 //     getItem(key: ): string | null
@@ -84,18 +88,18 @@ const CommandCompo = () => {
     }, [socket, isPlay])
 
     const pauseOrperation: React.ReactNode = setlist.map((elem) => 
-        <li key={elem.id}>
-            <div className='flex border-2 rounded-full border-gray-300 mb-3'>
-                <div className='flex-auto ml-10 mr-5 my-2'>{elem.sort}</div>
-                <div className='flex-auto mx-5 my-2'>{elem.text}</div>
-                <div className='flex-auto mx-5 my-2'>{elem.ruby}</div>
-                <div className='text-sm ml-2 mr-5 my-2'>{elem.memo}</div>
+        <li key={elem.id} className=''>
+            <div className='flex gap-5 px-5 py-1 border-2 rounded-full border-gray-300'>
+                <div className='flex-auto'>{elem.sort}</div>
+                <div className='flex-auto'>{elem.text}</div>
+                <div className='flex-auto'>{elem.ruby}</div>
+                <div className='text-sm'>{elem.memo}</div>
                 <button
                     onClick={() => {
                         console.log('play ->', elem.sort);
                         socket.emit('send_lyrics', {sort: elem.sort})
                     }}
-                    className={orderBtnStyle}
+                    className={btnBlueStyle}
                 >开始</button>
                 <button
                     onClick={() => {
@@ -103,39 +107,39 @@ const CommandCompo = () => {
                         socket.emit('delete_lyrics', {sort: elem.sort})
                         setSetlist(setlist.filter(x => x.sort !== elem.sort))
                     }}
-                    className='bg-red-500 hover:bg-red-700 rounded-full px-3 border-2 border-gray-300 text-white my-1 mx-3'
+                    className={btnRedStyle}
                 >删除</button>
             </div>
         </li>
     )
 
     const playingOperation: React.ReactNode = setlist.map((elem) => 
-        <li key={elem.id}>
-            <div className='flex border-2 rounded-full border-gray-300 mb-3'>
-                <div className='flex-auto ml-10 mr-5 my-2'>{elem.sort}</div>
-                <div className='flex-auto mx-5 my-2'>{elem.text}</div>
-                <div className='flex-auto mx-5 my-2'>{elem.ruby}</div>
-                <div className='text-sm ml-2 mr-5 my-2'>{elem.memo}</div>
+        <li key={elem.id} className=''>
+            <div className='flex gap-5 px-5 py-1 border-2 rounded-full border-gray-300'>
+                <div className='flex-auto'>{elem.sort}</div>
+                <div className='flex-auto'>{elem.text}</div>
+                <div className='flex-auto'>{elem.ruby}</div>
+                <div className='text-sm'>{elem.memo}</div>
                 <button
                     onClick={() => {
                         console.log('correct ->', elem.sort);
                         socket.emit('correct_lyrics', { sort: elem.sort })
                     }}
-                    className={orderBtnStyle}
+                    className={btnBlueStyle}
                 >校准下句</button>
                 <button
                     onClick={() => {
                         console.log('correct_lyrics_back ->', elem.sort);
                         socket.emit('correct_lyrics_back', { sort: elem.sort })
                     }}
-                    className={orderBtnStyle}
+                    className={btnBlueStyle}
                 >后退校准</button>
                 <button
                     onClick={() => {
                         console.log('stop ->', elem.sort);
                         socket.emit('stop_play', 1)
                     }}
-                    className='bg-orange-500 hover:bg-orange-700 rounded-full px-3 border-2 border-gray-300 text-white my-1 mx-3'
+                    className={btnOrangeStyle}
                 >停止</button>
             </div>
         </li>
