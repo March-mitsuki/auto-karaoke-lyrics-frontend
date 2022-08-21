@@ -29,7 +29,10 @@ Open [http://localhost:19810](http://localhost:19810) with your browser to see t
     - [ ] 增加可自定义css-animation功能
     - [ ] 修改手动输入css为样式生成器
 - [x] ~~增加可以交换text和ruby位置的功能~~ done
+    - [ ] 把checkbox换成toggle
 - [ ] 增加修改歌曲memo的功能
 - [ ] 现在数据储存在localStorage, 可以改成储存到服务器,每次onconnection发送当时数据进行初始化
 - [ ] 增加可以添加空行(空setlist)的功能
+- [ ] 增加播放过的行变暗的功能(可以手动取消变暗)
 - [ ] 整理难看的代码, 使得自建服务器只需要调整config
+- [ ] 增加多房间播放功能
