@@ -89,7 +89,7 @@ const CommandCompo = () => {
 
     const pauseOrperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id} className=''>
-            <div className='flex gap-5 px-5 py-1 border-2 rounded-full border-gray-300'>
+            <div className='flex gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>
@@ -114,8 +114,8 @@ const CommandCompo = () => {
     )
 
     const playingOperation: React.ReactNode = setlist.map((elem) => 
-        <li key={elem.id} className=''>
-            <div className='flex gap-5 px-5 py-1 border-2 rounded-full border-gray-300'>
+        <li key={elem.id} >
+            <div className='flex gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>

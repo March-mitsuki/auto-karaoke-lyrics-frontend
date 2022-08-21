@@ -38,10 +38,10 @@ const Home = () => {
                                 <DisplayStyleChanger />
                             </div>
                         </div>
-                        <div className=''>
+                        <div>
                             <CommandCompo />
                         </div>
-                        <div className=''>
+                        <div>
                             <Link href='/display'>
                                 <a className='float-right py-1 px-3 bg-sky-500 hover:bg-sky-700 rounded-full border-2 border-gray-300 text-4xl text-white'>
                                     Go Display
