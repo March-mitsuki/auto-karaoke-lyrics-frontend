@@ -50,7 +50,7 @@ export type ServerToClientEvents = {
         next: {
             text: string, ruby: string
         },
-        stat: 0 | 1 | 2 // 0 -> 最开始的一条, 1 -> 途中, 2 -> 最后一条
+        stat: 0 | 1 | 2 | 3 // 0 -> 最开始的一条, 1 -> 途中, 2 -> 最后一条, 3 -> 暂停
     }) => void;
 
     // 告知client删除字幕的返回状态
@@ -74,11 +74,20 @@ export type ClientToServerEvents = {
     // 真删除该sort的字幕
     delete_lyrics: (data: { sort: string | number }) => void;
 
-    // 校准时间
+    // 校准下一行时间(直接开始下一行)
     correct_lyrics: (data: { sort: string | number }) => void;
 
-    // 往后校准时间
-    correct_lyrics_back: (data: { sort: string | number }) => void;
+    // 往后校准时间(退回上一行开始)
+    correct_back: (data: { sort: string | number }) => void;
+
+    // 退回上上行开始
+    correct_back_two: (data: { sort: string | number }) => void;
+
+    // 暂停当前行
+    pause_lyrics: (data: { sort: string | number }) => void;
+
+    // 发送空白(不清除timeout)
+    send_blank: (data: { sort: string | number }) => void;    
 
     // 客户端请求刷新setlist
     reload_setlist: () => void;

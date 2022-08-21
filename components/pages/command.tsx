@@ -122,18 +122,40 @@ const CommandCompo = () => {
                 <div className='text-sm'>{elem.memo}</div>
                 <button
                     onClick={() => {
+                        console.log('send blank ->', elem.sort);
+                        socket.emit('send_blank', { sort: elem.sort })
+
+                    }}
+                    className={btnBlueStyle}
+                >发送</button>
+                <button
+                    onClick={() => {
+                        console.log('pause ->', elem.sort);
+                        socket.emit('pause_lyrics', { sort: elem.sort })
+                    }}
+                    className={btnBlueStyle}
+                >暂停</button>
+                <button
+                    onClick={() => {
                         console.log('correct ->', elem.sort);
                         socket.emit('correct_lyrics', { sort: elem.sort })
                     }}
                     className={btnBlueStyle}
-                >校准下句</button>
+                >校准</button>
                 <button
                     onClick={() => {
-                        console.log('correct_lyrics_back ->', elem.sort);
-                        socket.emit('correct_lyrics_back', { sort: elem.sort })
+                        console.log('correct_back ->', elem.sort);
+                        socket.emit('correct_back', { sort: elem.sort })
                     }}
                     className={btnBlueStyle}
-                >后退校准</button>
+                >后退</button>
+                <button
+                    onClick={() => {
+                        console.log('correct back two ->', elem.sort);
+                        socket.emit('correct_back_two', { sort: elem.sort })
+                    }}
+                    className={btnBlueStyle}
+                >后后退</button>
                 <button
                     onClick={() => {
                         console.log('stop ->', elem.sort);
