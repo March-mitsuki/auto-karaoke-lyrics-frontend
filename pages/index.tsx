@@ -1,11 +1,15 @@
-import Head from 'next/head'
+import Head from 'next/head';
 import Link from 'next/link';
 import {
     SocketProvider,
     FileInput,
-    OrderCompo
+    PageControlBtn,
+    StyleChangerInfo
 } from '@/components';
-
+import dynamic from 'next/dynamic';
+const CommandCompo = dynamic(() => import('../components/pages/command'), {ssr: false})
+const Preview = dynamic(() => import('../components/pages/preview'), {ssr: false})
+const DisplayStyleChanger = dynamic(() => import('../components/pages/displayStyleChanger'), {ssr: false})
 
 const Home = () => {
     return(
@@ -13,21 +17,37 @@ const Home = () => {
             <Head>
                 <title>Auto-Karaoke</title>
             </Head>
-            <div className='h-screen bg-sky-100'>
-                <h1 className='text-center rounded-full px-3 py-2 border-2 border-gray-300 text-4xl'>Auto Lyrics Player</h1>
+            <div className='min-h-screen bg-sky-100'>
+                <h1 className='text-center px-3 py-2 border-b-2 border-gray-300 text-4xl'>
+                    Auto Lyrics Player
+                </h1>
                 <SocketProvider>
-                    <div className='px-5 py-2 mt-4 mt-2'>
-                        <FileInput />
+                    <div className='sticky bg-sky-100 top-0 border-b-2 shadow-md flex gap-10 px-10 py-5 items-center min-w-full'>
+                        <Preview />
                     </div>
-                    <div className='px-5 py-2 mt-2 mb-6'>
-                        <OrderCompo />
-                    </div>
-                    <div className='text-right'>
-                        <Link href='/display'>
-                            <a className='bg-sky-500 hover:bg-sky-700 rounded-full px-10 py-2 mx-10 border-2 border-gray-300 text-4xl'>
-                                Go Display
-                            </a>
-                        </Link>
+                    <div className='grid gap-5 px-10 py-5'>
+                        <div className='grid gap-5'>
+                            <div className='flex gap-5 items-center'>
+                                <StyleChangerInfo />
+                                <PageControlBtn />
+                            </div>
+                            <div className='flex gap-5'>
+                                <FileInput />
+                            </div>
+                            <div className='flex gap-5 pl-5'>
+                                <DisplayStyleChanger />
+                            </div>
+                        </div>
+                        <div>
+                            <CommandCompo />
+                        </div>
+                        <div>
+                            <Link href='/display'>
+                                <a className='float-right py-1 px-3 bg-sky-500 hover:bg-sky-700 rounded-full border-2 border-gray-300 text-4xl text-white'>
+                                    Go Display
+                                </a>
+                            </Link>
+                        </div>
                     </div>
                 </SocketProvider>
             </div>
