@@ -145,18 +145,26 @@ const CommandCompo = () => {
         </li>
     )
 
-    if (isPlay === 'true') {
+    if (setlist.length === 0) {
         return (
-            <ul>
-                {playingOperation}
-            </ul>
+            <div className='text-center px-5 py-1 border-2 rounded-full border-gray-300'>
+                人家里面还什么都没有哦...要不要试试上传一个ass塞满人家?
+            </div>
         )
     } else {
-        return (
-            <ul>
-                {pauseOrperation}
-            </ul>
-        )
+        if (isPlay === 'true') {
+            return (
+                <ul>
+                    {playingOperation}
+                </ul>
+            )
+        } else {
+            return (
+                <ul>
+                    {pauseOrperation}
+                </ul>
+            )
+        }
     }
 }
 
