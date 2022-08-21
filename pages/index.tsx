@@ -18,14 +18,14 @@ const Home = () => {
                 <title>Auto-Karaoke</title>
             </Head>
             <div className='min-h-screen bg-sky-100'>
-                <h1 className='text-center px-3 py-2 border-b-2 shadow-md border-gray-300 text-4xl'>
+                <h1 className='text-center px-3 py-2 border-b-2 border-gray-300 text-4xl'>
                     Auto Lyrics Player
                 </h1>
                 <SocketProvider>
+                    <div className='sticky bg-sky-100 top-0 border-b-2 shadow-md flex gap-10 px-10 py-5 items-center min-w-full'>
+                        <Preview />
+                    </div>
                     <div className='grid gap-5 px-10 py-5'>
-                        <div className='flex gap-10 items-center min-w-full'>
-                            <Preview />
-                        </div>
                         <div className='grid gap-5'>
                             <div className='flex gap-5 items-center'>
                                 <StyleChangerInfo />
