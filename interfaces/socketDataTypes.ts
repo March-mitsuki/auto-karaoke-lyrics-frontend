@@ -21,8 +21,10 @@ export interface Setlist {
     ruby: string,
     memo: string
 }
+// 前端实际使用的SetlistData
 export interface SetlistData extends Setlist {
-    isSend: boolean;
+    isSended?: boolean,
+    isEditing?: boolean,
 }
 export type DisplayStyleData = {
     text: CSS.Properties,
@@ -41,7 +43,7 @@ type AddAssData = {
 // server.emit, client.on
 export type ServerToClientEvents = {
     // 发送setlist
-    setlist_response: (data: SetlistData[]) => void;
+    setlist_response: (data: Setlist[]) => void;
 
     // 每次更新字幕
     change_lyrics: (data: {
@@ -61,7 +63,7 @@ export type ServerToClientEvents = {
     delete_lyrics_info: (data: { stat: boolean, sort: number }) => void;
 
     // 通知客户端更改display-style
-    change_style: (data: DisplayStyleData) => void
+    change_style: (data: DisplayStyleData) => void;
 }
 
 // client.emit, server.on
@@ -97,5 +99,8 @@ export type ClientToServerEvents = {
     reload_setlist: () => void;
 
     // 客户端请求更新display-style
-    req_change_style: (data: DisplayStyleData) => void
+    req_change_style: (data: DisplayStyleData) => void;
+
+    // 请求更新对应sort的memo
+    update_memo: (data: {sort: string | number, memo: string}) => void;
 }

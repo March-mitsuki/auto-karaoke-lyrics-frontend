@@ -1,11 +1,13 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
 import { useSocket } from '../socket'
 import type { SetlistData } from '@/interfaces/socketDataTypes';
 import {
     btnBlueStyle, btnOrangeStyle, btnRedStyle, btnSkyStyle,
-    cmdLineStyle, cmdLineStyleDark
+    cmdLineStyle, cmdLineStyleDark,
+    basicInputStyle
 } from '@/styles/styleStr';
 
+// 有时间了定义一下localStorage
 // interface CustomStorage<T> extends Storage {
 //     getItem(key: ): string | null
 // }
@@ -39,7 +41,8 @@ const CommandCompo = () => {
         text: 'NULL',
         ruby: 'null',
         memo: 'connecting to server...',
-        isSend: false
+        isSended: false,
+        isEditing: false
     }])
     const [isPlay, setIsPlay] = useState<'true' | 'false'>(() => {
         if (typeof(window) !== 'undefined') {
@@ -65,7 +68,13 @@ const CommandCompo = () => {
         });
         socket.on('setlist_response', (data) => {
             console.log('on setlist_response');
-            setSetlist(data)
+            const shalloCopy: SetlistData[] = data
+            let insertData = shalloCopy.map(elem => {
+                elem.isSended = false
+                elem.isEditing = false
+                return elem
+            })
+            setSetlist(insertData)
         });
 
         socket.on("change_lyrics", (data) => {
@@ -106,21 +115,60 @@ const CommandCompo = () => {
 
     const pauseOrperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id} className=''>
-            <div className={elem.isSend ? cmdLineStyleDark : cmdLineStyle}>
+            <div className={elem.isSended ? cmdLineStyleDark : cmdLineStyle}>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>
-                <div
-                    className='text-sm'
-                    onDoubleClick={(event) => console.log(event.target)}
-                >{elem.memo}</div>
+                {
+                    elem.isEditing
+                    ? <input 
+                        type='text'
+                        value={elem.memo}
+                        className={basicInputStyle}
+                        onChange={(event) => {
+                            setSetlist(setlist.map(mapElem => {
+                                if (mapElem.sort === elem.sort) {
+                                    mapElem.memo = event.target.value
+                                }
+                                return mapElem
+                            }))
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === 'Escape') {
+                                event.stopPropagation()
+                                event.preventDefault()
+                                setSetlist(setlist.map(mapElem => {
+                                    if (mapElem.sort === elem.sort) {
+                                        mapElem.isEditing = false
+                                    }
+                                    return mapElem
+                                }))
+                                socket.emit('update_memo', {
+                                    sort: elem.sort,
+                                    memo: elem.memo
+                                })
+                            }
+                        }}
+                    />
+                    : <div
+                        className='text-sm'
+                        onDoubleClick={(event) => {
+                            setSetlist(setlist.map(mapElem => {
+                                if (mapElem.sort === elem.sort) {
+                                    mapElem.isEditing = true
+                                }
+                                return mapElem
+                            }))
+                        }}
+                    >{elem.memo}</div>
+                }
                 <button
                     onClick={() => {
                         console.log('play ->', elem.sort);
                         socket.emit('send_lyrics', {sort: elem.sort})
                         setSetlist(setlist.map(mapElem => {
                             if (mapElem.sort === elem.sort) {
-                                mapElem.isSend = true
+                                mapElem.isSended = true
                             }
                             return mapElem
                         }))
@@ -135,13 +183,19 @@ const CommandCompo = () => {
                     }}
                     className={btnRedStyle}
                 >删除</button>
+                {/* <button
+                    onClick={() => {
+                        console.log(setlist);
+                    }}
+                    className={btnRedStyle}
+                >看看</button> */}
             </div>
         </li>
     )
 
     const playingOperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id} >
-            <div className={elem.isSend ? cmdLineStyleDark : cmdLineStyle}>
+            <div className={elem.isSended ? cmdLineStyleDark : cmdLineStyle}>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>
