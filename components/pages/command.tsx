@@ -1,16 +1,34 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
 import { useSocket } from '../socket'
 import type { SetlistData } from '@/interfaces/socketDataTypes';
 import {
-    btnBlueStyle,
-    btnOrangeStyle,
-    btnRedStyle
+    btnBlueStyle, btnOrangeStyle, btnRedStyle, btnSkyStyle,
+    cmdLineStyle, cmdLineStyleDark,
+    basicInputStyle
 } from '@/styles/styleStr';
 
+// 有时间了定义一下localStorage
 // interface CustomStorage<T> extends Storage {
 //     getItem(key: ): string | null
 // }
 
+export const popInput = (preValue: string) => {
+    return new Promise((resolve, reject) => {
+        try {
+            let input = document.createElement('input');
+            input.value = preValue;
+            input.type = 'text';
+            input.onchange = (event: any) => {
+                let inputValue = event.target.value;
+                console.log(inputValue);
+                resolve(inputValue)
+            };
+            input.click();
+        } catch (err) {
+            reject(`popFileSelector error: ${err}`)
+        }
+    });
+}
 
 const CommandCompo = () => {
     const socket = useSocket();
@@ -22,7 +40,9 @@ const CommandCompo = () => {
         sort: -1,
         text: 'NULL',
         ruby: 'null',
-        memo: 'connecting to server...'
+        memo: 'connecting to server...',
+        isSended: false,
+        isEditing: false
     }])
     const [isPlay, setIsPlay] = useState<'true' | 'false'>(() => {
         if (typeof(window) !== 'undefined') {
@@ -48,7 +68,13 @@ const CommandCompo = () => {
         });
         socket.on('setlist_response', (data) => {
             console.log('on setlist_response');
-            setSetlist(data)
+            const shalloCopy: SetlistData[] = data
+            let insertData = shalloCopy.map(elem => {
+                elem.isSended = false
+                elem.isEditing = false
+                return elem
+            })
+            setSetlist(insertData)
         });
 
         socket.on("change_lyrics", (data) => {
@@ -89,15 +115,63 @@ const CommandCompo = () => {
 
     const pauseOrperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id} className=''>
-            <div className='flex gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'>
+            <div className={elem.isSended ? cmdLineStyleDark : cmdLineStyle}>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>
-                <div className='text-sm'>{elem.memo}</div>
+                {
+                    elem.isEditing
+                    ? <input 
+                        type='text'
+                        value={elem.memo}
+                        className={basicInputStyle}
+                        onChange={(event) => {
+                            setSetlist(setlist.map(mapElem => {
+                                if (mapElem.sort === elem.sort) {
+                                    mapElem.memo = event.target.value
+                                }
+                                return mapElem
+                            }))
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === 'Escape') {
+                                event.stopPropagation()
+                                event.preventDefault()
+                                setSetlist(setlist.map(mapElem => {
+                                    if (mapElem.sort === elem.sort) {
+                                        mapElem.isEditing = false
+                                    }
+                                    return mapElem
+                                }))
+                                socket.emit('update_memo', {
+                                    sort: elem.sort,
+                                    memo: elem.memo
+                                })
+                            }
+                        }}
+                    />
+                    : <div
+                        className='text-sm'
+                        onDoubleClick={(event) => {
+                            setSetlist(setlist.map(mapElem => {
+                                if (mapElem.sort === elem.sort) {
+                                    mapElem.isEditing = true
+                                }
+                                return mapElem
+                            }))
+                        }}
+                    >{elem.memo}</div>
+                }
                 <button
                     onClick={() => {
                         console.log('play ->', elem.sort);
                         socket.emit('send_lyrics', {sort: elem.sort})
+                        setSetlist(setlist.map(mapElem => {
+                            if (mapElem.sort === elem.sort) {
+                                mapElem.isSended = true
+                            }
+                            return mapElem
+                        }))
                     }}
                     className={btnBlueStyle}
                 >开始</button>
@@ -115,25 +189,46 @@ const CommandCompo = () => {
 
     const playingOperation: React.ReactNode = setlist.map((elem) => 
         <li key={elem.id} >
-            <div className='flex gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'>
+            <div className={elem.isSended ? cmdLineStyleDark : cmdLineStyle}>
                 <div className='flex-auto'>{elem.sort}</div>
                 <div className='flex-auto'>{elem.text}</div>
                 <div className='flex-auto'>{elem.ruby}</div>
                 <div className='text-sm'>{elem.memo}</div>
                 <button
                     onClick={() => {
+                        console.log('send blank ->', elem.sort);
+                        socket.emit('send_blank', { sort: elem.sort })
+                    }}
+                    className={btnSkyStyle}
+                >空白</button>
+                <button
+                    onClick={() => {
+                        console.log('pause ->', elem.sort);
+                        socket.emit('pause_lyrics', { sort: elem.sort })
+                    }}
+                    className={btnSkyStyle}
+                >暂停</button>
+                <button
+                    onClick={() => {
                         console.log('correct ->', elem.sort);
                         socket.emit('correct_lyrics', { sort: elem.sort })
                     }}
                     className={btnBlueStyle}
-                >校准下句</button>
+                >校准</button>
                 <button
                     onClick={() => {
-                        console.log('correct_lyrics_back ->', elem.sort);
-                        socket.emit('correct_lyrics_back', { sort: elem.sort })
+                        console.log('correct_back ->', elem.sort);
+                        socket.emit('correct_back', { sort: elem.sort })
                     }}
                     className={btnBlueStyle}
-                >后退校准</button>
+                >后退</button>
+                <button
+                    onClick={() => {
+                        console.log('correct back two ->', elem.sort);
+                        socket.emit('correct_back_two', { sort: elem.sort })
+                    }}
+                    className={btnSkyStyle}
+                >后后退</button>
                 <button
                     onClick={() => {
                         console.log('stop ->', elem.sort);
