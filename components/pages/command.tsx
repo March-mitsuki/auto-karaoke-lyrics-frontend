@@ -183,12 +183,6 @@ const CommandCompo = () => {
                     }}
                     className={btnRedStyle}
                 >删除</button>
-                {/* <button
-                    onClick={() => {
-                        console.log(setlist);
-                    }}
-                    className={btnRedStyle}
-                >看看</button> */}
             </div>
         </li>
     )

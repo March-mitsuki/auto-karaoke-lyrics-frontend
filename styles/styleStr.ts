@@ -9,5 +9,5 @@ export const basicInputStyle = 'focus:ring-indigo-500 focus:border-indigo-500 px
 
 // 盒子类
 export const cmdLineStyle = 'flex gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'
-export const cmdLineStyleDark = 'flex bg-sky-200 gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'
+export const cmdLineStyleDark = 'flex bg-gray-300 gap-5 mb-2 px-5 py-1 border-2 rounded-full border-gray-300'
 
