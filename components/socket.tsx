@@ -9,7 +9,7 @@ import type {
 export const socket: Socket<
     ServerToClientEvents,
     ClientToServerEvents
-> = io('ws://subapi.mitsuki114514.com', {
+> = io('wss://subapi.mitsuki114514.com', {
     transports: ['websocket']
 })
 
