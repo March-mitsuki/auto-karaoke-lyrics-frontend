@@ -1,12 +1,12 @@
-import dynamic from "next/dynamic";
-const SocketDisplay = dynamic(() => import('../components/pages/socketDisplay'), {ssr: false})
+import dynamic from 'next/dynamic'
+const SocketDisplay = dynamic(() => import('../components/pages/socketDisplay'), { ssr: false })
 
 const Display = () => {
-    return (
-        <>
-            <SocketDisplay />
-        </>
-    )
+  return (
+    <>
+      <SocketDisplay />
+    </>
+  )
 }
 
 export default Display
