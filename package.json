@@ -8,7 +8,8 @@
     "start": "next start -p 19810",
     "export": "next build && next export",
     "lint": "next lint",
-    "fmt": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'"
+    "fmt": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
+    "fmt-check": "prettier --check --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'"
   },
   "dependencies": {
     "csstype": "^3.1.0",

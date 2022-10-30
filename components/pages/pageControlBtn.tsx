@@ -1,5 +1,4 @@
 import { btnBlueStyle, btnRedStyle } from '@/styles/styleStr'
-import { useSocket } from '../socket'
 import { STYLE_ORDER, STYLE_RUBY, STYLE_TEXT } from './displayStyleChanger'
 import {
   BEFORE_RUBY,
@@ -10,8 +9,10 @@ import {
   NEXT_TEXT,
 } from './preview'
 
-const PageControlBtn = () => {
-  const socket = useSocket()
+import type { Socket } from 'socket.io-client'
+
+const PageControlBtn: React.FC<{ws: Socket}> = (props) => {
+  const socket = props.ws
   return (
     <>
       <button

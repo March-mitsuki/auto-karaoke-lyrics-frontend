@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useSocket } from '../socket'
+
+import type { Socket } from 'socket.io-client'
 
 const sidePreviewStyle =
   'grid rounded-lg text-center px-5 bg-gray-300 min-w-[300px] max-w-[300px] min-h-[60px] max-h-[60px]'
@@ -15,8 +16,8 @@ export const BEFORE_RUBY = 'operation/preview/before_ruby'
 export const NEXT_TEXT = 'operation/preview/next_text'
 export const NEXT_RUBY = 'operation/preview/next_ruby'
 
-const Preview = () => {
-  const socket = useSocket()
+const Preview: React.FC<{ws: Socket}> = (props) => {
+  const socket = props.ws
   const hasInitialized = useRef(false)
 
   const [current, setCurrent] = useState<{

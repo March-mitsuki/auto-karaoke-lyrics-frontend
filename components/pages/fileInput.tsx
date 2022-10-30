@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { useSocket } from '../socket'
 import { basicInputStyle, btnOrangeStyle } from '@/styles/styleStr'
 
-export const popFileSelector = () => {
+import type { Socket } from 'socket.io-client'
+
+const popFileSelector = () => {
   return new Promise((resolve, reject) => {
     try {
       let input = document.createElement('input')
@@ -24,8 +25,8 @@ export const popFileSelector = () => {
   })
 }
 
-const FileInput = () => {
-  const socket = useSocket()
+const FileInput: React.FC<{ws: Socket}> = (props) => {
+  const socket = props.ws
   const [sort, setSort] = useState('')
   const [memo, setMemo] = useState('')
   const [type, setType] = useState('speaker-instead')

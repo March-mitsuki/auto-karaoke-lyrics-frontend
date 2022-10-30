@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef, memo } from 'react'
-import { useSocket } from '../socket'
+import { useEffect, useState, useRef } from 'react'
 import type { SetlistData } from '@/interfaces/socketDataTypes'
 import {
   btnBlueStyle,
@@ -11,12 +10,16 @@ import {
   basicInputStyle,
 } from '@/styles/styleStr'
 
+import type { Socket } from 'socket.io-client'
+import type { ServerToClientEvents, ClientToServerEvents } from '@/interfaces/socketDataTypes'
+
+
 // 有时间了定义一下localStorage
 // interface CustomStorage<T> extends Storage {
 //     getItem(key: ): string | null
 // }
 
-export const popInput = (preValue: string) => {
+const popInput = (preValue: string) => {
   return new Promise((resolve, reject) => {
     try {
       let input = document.createElement('input')
@@ -34,8 +37,8 @@ export const popInput = (preValue: string) => {
   })
 }
 
-const CommandCompo = () => {
-  const socket = useSocket()
+const CommandCompo: React.FC<{ws: Socket}> = (props) => {
+  const socket = props.ws
   const hasInitialized = useRef(false)
   const IS_PLAY_STATE = 'operation/command/isplay'
 

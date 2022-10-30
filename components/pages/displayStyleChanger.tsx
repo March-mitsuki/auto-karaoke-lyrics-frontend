@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { basicInputStyle, btnOrangeStyle } from '@/styles/styleStr'
-import { useSocket } from '../socket'
 import type * as CSS from 'csstype'
+
+import type { Socket } from 'socket.io-client'
 
 export const STYLE_TEXT = 'operation/style/text'
 export const STYLE_RUBY = 'operation/style/ruby'
 export const STYLE_ORDER = 'operation/style/order'
 
-const DisplayStyleChanger = () => {
-  const socket = useSocket()
+const DisplayStyleChanger: React.FC<{ws: Socket}> = (props) => {
+  const socket = props.ws
 
   const textStyleDefault: CSS.Properties = {
     textAlign: 'center',
