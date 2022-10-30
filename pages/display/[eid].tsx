@@ -1,8 +1,8 @@
-import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { io } from 'socket.io-client'
 
-import { SocketDisplay } from "@/components"
+import { SocketDisplay } from '@/components'
 
 import type { Socket } from 'socket.io-client'
 import type { ServerToClientEvents, ClientToServerEvents } from '@/interfaces/socketDataTypes'
@@ -10,7 +10,7 @@ import type { ServerToClientEvents, ClientToServerEvents } from '@/interfaces/so
 const Display = () => {
   const router = useRouter()
   const { eid } = router.query
-  if (typeof eid !== "string") {
+  if (typeof eid !== 'string') {
     return
   }
 
@@ -40,9 +40,7 @@ const Display = () => {
     }
   }, [socket])
 
-  return (
-    <SocketDisplay ws={socket} />
-  )
+  return <SocketDisplay ws={socket} />
 }
 
 export default Display

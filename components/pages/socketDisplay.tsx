@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import type * as CSS from 'csstype'
 import type { Socket } from 'socket.io-client'
 
-const SocketDisplay: React.FC<{ws: Socket}> = (props) => {
+const SocketDisplay: React.FC<{ ws: Socket }> = (props) => {
   const socket = props.ws
   const hasInitialized = useRef(false)
 

@@ -25,7 +25,7 @@ const popFileSelector = () => {
   })
 }
 
-const FileInput: React.FC<{ws: Socket}> = (props) => {
+const FileInput: React.FC<{ ws: Socket }> = (props) => {
   const socket = props.ws
   const [sort, setSort] = useState('')
   const [memo, setMemo] = useState('')

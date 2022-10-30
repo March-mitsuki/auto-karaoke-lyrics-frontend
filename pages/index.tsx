@@ -34,9 +34,7 @@ const Home = () => {
             </button>
           </Link>
         </div>
-        <div>
-          Home Page Here
-        </div>
+        <div>Home Page Here</div>
       </div>
     </>
   )

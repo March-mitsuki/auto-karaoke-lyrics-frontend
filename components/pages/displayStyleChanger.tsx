@@ -8,7 +8,7 @@ export const STYLE_TEXT = 'operation/style/text'
 export const STYLE_RUBY = 'operation/style/ruby'
 export const STYLE_ORDER = 'operation/style/order'
 
-const DisplayStyleChanger: React.FC<{ws: Socket}> = (props) => {
+const DisplayStyleChanger: React.FC<{ ws: Socket }> = (props) => {
   const socket = props.ws
 
   const textStyleDefault: CSS.Properties = {

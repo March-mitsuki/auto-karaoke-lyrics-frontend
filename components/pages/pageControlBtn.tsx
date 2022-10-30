@@ -11,7 +11,7 @@ import {
 
 import type { Socket } from 'socket.io-client'
 
-const PageControlBtn: React.FC<{ws: Socket}> = (props) => {
+const PageControlBtn: React.FC<{ ws: Socket }> = (props) => {
   const socket = props.ws
   return (
     <>

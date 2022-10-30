@@ -16,7 +16,7 @@ export const BEFORE_RUBY = 'operation/preview/before_ruby'
 export const NEXT_TEXT = 'operation/preview/next_text'
 export const NEXT_RUBY = 'operation/preview/next_ruby'
 
-const Preview: React.FC<{ws: Socket}> = (props) => {
+const Preview: React.FC<{ ws: Socket }> = (props) => {
   const socket = props.ws
   const hasInitialized = useRef(false)
 

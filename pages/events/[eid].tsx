@@ -19,7 +19,7 @@ import type { ServerToClientEvents, ClientToServerEvents } from '@/interfaces/so
 const EventPage = () => {
   const router = useRouter()
   const { eid } = router.query
-  if (typeof eid !== "string") {
+  if (typeof eid !== 'string') {
     return
   }
 

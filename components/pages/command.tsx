@@ -13,7 +13,6 @@ import {
 import type { Socket } from 'socket.io-client'
 import type { ServerToClientEvents, ClientToServerEvents } from '@/interfaces/socketDataTypes'
 
-
 // 有时间了定义一下localStorage
 // interface CustomStorage<T> extends Storage {
 //     getItem(key: ): string | null
@@ -37,7 +36,7 @@ const popInput = (preValue: string) => {
   })
 }
 
-const CommandCompo: React.FC<{ws: Socket}> = (props) => {
+const CommandCompo: React.FC<{ ws: Socket }> = (props) => {
   const socket = props.ws
   const hasInitialized = useRef(false)
   const IS_PLAY_STATE = 'operation/command/isplay'
