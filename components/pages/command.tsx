@@ -71,10 +71,6 @@ const CommandCompo: React.FC<{ ws: Socket }> = (props) => {
       return
     }
     hasInitialized.current = true
-    socket.on('connect', () => {
-      console.log('client connect')
-      socket.emit('reload_setlist')
-    })
     socket.on('setlist_response', (data) => {
       console.log('on setlist_response')
       const shalloCopy: SetlistData[] = data

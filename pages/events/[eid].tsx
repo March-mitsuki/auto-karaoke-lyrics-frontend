@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { io } from 'socket.io-client'
 
 import {
@@ -17,11 +16,9 @@ import type { Socket } from 'socket.io-client'
 import type { ServerToClientEvents, ClientToServerEvents } from '@/interfaces/socketDataTypes'
 
 const EventPage = () => {
+  const hasInitialized = useRef(false)
   const router = useRouter()
   const { eid } = router.query
-  if (typeof eid !== 'string') {
-    return
-  }
 
   let wsUrl: string
   let wsTransports: string[]
@@ -32,27 +29,33 @@ const EventPage = () => {
     wsUrl = process.env.DEV_WS_URL!
     wsTransports = ['polling', 'websocket']
   }
-
   const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(wsUrl, {
     transports: wsTransports,
   })
 
+  const pageChangeHandler = () => {
+    console.log('now page change')
+    socket.disconnect()
+  }
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('now connection')
-      socket.emit('join_room', eid)
-    })
-    return () => {
-      if (socket.connected) {
-        socket.close()
-      }
+    router.events.on('routeChangeStart', pageChangeHandler)
+    if (!hasInitialized.current) {
+      socket.on('connect', () => {
+        console.log('now client connect')
+        socket.emit('join_room', eid as string)
+        socket.emit('reload_setlist')
+      })
     }
-  }, [socket])
+    hasInitialized.current = true
+    return () => {
+      router.events.off('routeChangeStart', pageChangeHandler)
+    }
+  })
 
   return (
     <div className='min-h-screen bg-sky-100'>
       <div className=''>
-        <Navi eid={eid}></Navi>
+        <Navi eid={eid as string}></Navi>
         <div className='sticky top-0 border-b-2 shadow-md flex gap-10 px-10 py-5 items-center min-w-full bg-sky-100'>
           <Preview ws={socket} />
         </div>

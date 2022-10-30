@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { io } from 'socket.io-client'
 
 import { SocketDisplay } from '@/components'
@@ -10,9 +10,6 @@ import type { ServerToClientEvents, ClientToServerEvents } from '@/interfaces/so
 const Display = () => {
   const router = useRouter()
   const { eid } = router.query
-  if (typeof eid !== 'string') {
-    return
-  }
 
   let wsUrl: string
   let wsTransports: string[]
@@ -23,7 +20,6 @@ const Display = () => {
     wsUrl = process.env.DEV_WS_URL!
     wsTransports = ['polling', 'websocket']
   }
-
   const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(wsUrl, {
     transports: wsTransports,
   })
@@ -31,14 +27,9 @@ const Display = () => {
   useEffect(() => {
     socket.on('connect', () => {
       console.log('now connection')
-      socket.emit('join_room', eid)
+      socket.emit('join_room', eid as string)
     })
-    return () => {
-      if (socket.connected) {
-        socket.close()
-      }
-    }
-  }, [socket])
+  })
 
   return <SocketDisplay ws={socket} />
 }
